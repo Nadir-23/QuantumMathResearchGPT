@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-primary: #2563eb;
+  --color-primary-dark: #1e40af;
+  --color-secondary: #7c3aed;
+  --color-border: #e2e8f0;
+  --color-accent: #f59e0b;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .chat-message {
+    @apply mb-4 flex gap-3 animate-in fade-in slide-in-from-bottom-2;
+  }
+
+  .chat-message.user {
+    @apply justify-end;
+  }
+
+  .message-content {
+    @apply rounded-lg px-4 py-2 max-w-2xl;
+  }
+
+  .message-content.user {
+    @apply bg-primary text-white;
+  }
+
+  .message-content.assistant {
+    @apply bg-secondary/10 text-foreground border border-border;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg border border-border hover:bg-secondary/5 transition-colors;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* LaTeX rendering support */
+.math {
+  font-family: "Cambria Math", "Times New Roman", serif;
+}
+
+.math-inline {
+  display: inline;
+  margin: 0 2px;
+}
+
+.math-block {
+  display: block;
+  margin: 12px 0;
+  text-align: center;
+}
+
+/* Code block styling */
+pre {
+  @apply bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto text-sm;
+}
+
+code {
+  @apply bg-slate-100 text-slate-900 px-2 py-1 rounded text-sm;
+}
+
+pre code {
+  @apply bg-transparent text-slate-100 px-0 py-0;
+}
