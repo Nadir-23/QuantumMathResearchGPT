@@ -47,7 +47,7 @@ export default function ChatInput({
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-end">
         <div className="flex-1 relative">
           <textarea
             ref={textareaRef}
@@ -57,17 +57,18 @@ export default function ChatInput({
             placeholder={placeholder}
             disabled={isLoading}
             rows={1}
-            className="input-field resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+            className="input-field resize-none disabled:opacity-50 disabled:cursor-not-allowed max-h-32"
           />
-          <div className="absolute bottom-2 right-2 text-xs text-gray-500 pointer-events-none">
-            <kbd className="px-2 py-1 bg-gray-700 rounded text-gray-300">Ctrl+Enter</kbd>
+          <div className="absolute bottom-3 right-3 text-xs text-muted pointer-events-none hidden sm:block">
+            <kbd className="px-2.5 py-1 bg-card border border-border rounded-md text-muted-light font-mono text-xs">Ctrl+Enter</kbd>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={isLoading || !message.trim()}
-          className="btn-primary"
+          className="btn-primary flex-shrink-0 h-11 w-11 p-0 flex items-center justify-center"
+          title={isLoading ? "Generating response..." : "Send message"}
         >
           {isLoading ? (
             <Loader size={20} className="animate-spin" />

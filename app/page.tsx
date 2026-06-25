@@ -70,21 +70,26 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="border-b border-purple-500/30 bg-black/40 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                QuantumMathResearchGPT
-              </h1>
-              <p className="text-sm text-gray-400 mt-1">
+      <div className="border-b border-border-light bg-gradient-to-br from-card to-card-dark/80 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-background font-bold">
+                  Ψ
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold text-gradient">
+                  QuantumMathResearchGPT
+                </h1>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-light">
                 Multi-agent AI for Mathematics, Quantum Physics &amp; Research
               </p>
             </div>
-            <div className="text-xs text-gray-500">
-              Conversation ID: {conversationId.slice(0, 8)}...
+            <div className="text-right hidden sm:block">
+              <div className="text-xs text-muted">ID: {conversationId.slice(0, 8)}</div>
             </div>
           </div>
         </div>
@@ -92,22 +97,22 @@ export default function Home() {
 
       {/* Main Chat Area */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-96 text-center">
-              <div className="mb-6">
-                <div className="text-6xl mb-4">🧮</div>
-                <h2 className="text-3xl font-bold text-white mb-2">
-                  Welcome to QuantumMathResearchGPT
+            <div className="flex flex-col items-center justify-center min-h-96 text-center space-y-8">
+              <div>
+                <div className="text-6xl sm:text-7xl mb-6 inline-block bg-gradient-to-br from-primary via-secondary to-primary bg-clip-text text-transparent">
+                  Ψ
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
+                  Explore Quantum & Math
                 </h2>
-                <p className="text-gray-400 max-w-md mx-auto mb-6">
-                  Ask me about mathematics, quantum physics, quantum computing,
-                  or scientific research. I can solve equations, simulate
-                  quantum circuits, and search the latest research papers.
+                <p className="text-muted-light max-w-lg mx-auto text-base leading-relaxed">
+                  Ask me about mathematics, quantum physics, quantum computing, or scientific research. I can solve equations, simulate quantum circuits, and search the latest research papers.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
                 {[
                   {
                     icon: "📐",
@@ -132,13 +137,13 @@ export default function Home() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20 hover:border-purple-500/40 transition-colors"
+                    className="glass-card p-4 hover:border-primary/80 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group cursor-pointer"
                   >
-                    <div className="text-2xl mb-2">{item.icon}</div>
-                    <p className="font-semibold text-sm text-white">
+                    <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">{item.icon}</div>
+                    <p className="font-semibold text-foreground group-hover:text-primary transition-colors">
                       {item.title}
                     </p>
-                    <p className="text-xs text-gray-400">{item.desc}</p>
+                    <p className="text-sm text-muted-light">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -147,13 +152,13 @@ export default function Home() {
             <ChatContainer messages={messages} />
           )}
 
-          <div ref={scrollRef} />
+          <div ref={scrollRef} className="h-4" />
         </div>
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-purple-500/30 bg-black/40 backdrop-blur-md sticky bottom-0">
-        <div className="max-w-4xl mx-auto px-4 py-4">
+      <div className="border-t border-border-light bg-gradient-to-t from-card to-card/50 backdrop-blur-xl sticky bottom-0">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <ChatInput
             onSendMessage={handleSendMessage}
             isLoading={isLoading}

@@ -16,9 +16,11 @@ interface ChatContainerProps {
 
 export default function ChatContainer({ messages }: ChatContainerProps) {
   return (
-    <div className="space-y-4">
-      {messages.map((message) => (
-        <ChatMessage key={message.id} message={message} />
+    <div className="space-y-6 py-4">
+      {messages.map((message, index) => (
+        <div key={message.id} className="animate-in fade-in slide-in-from-bottom-3 duration-500">
+          <ChatMessage message={message} />
+        </div>
       ))}
     </div>
   );

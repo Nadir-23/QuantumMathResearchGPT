@@ -30,8 +30,8 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       if (idx % 2 === 1) {
         // Code block
         return (
-          <pre key={idx} className="bg-slate-900 text-slate-100 p-3 rounded my-2 overflow-x-auto text-sm">
-            <code>{part}</code>
+          <pre key={idx} className="bg-gradient-to-br from-card-dark to-background border border-border-light text-foreground p-4 rounded-lg my-3 overflow-x-auto text-sm">
+            <code className="font-mono text-primary">{part}</code>
           </pre>
         );
       }
@@ -103,31 +103,35 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={`message-content ${
           isError
-            ? "bg-red-500/20 border-red-500/50 text-red-100"
+            ? "bg-gradient-to-br from-red-500/20 to-red-600/10 border-2 border-red-500/50 text-red-100 shadow-lg shadow-red-500/10"
             : isUser
               ? "user"
               : "assistant"
         }`}
       >
-        <div className="text-sm leading-relaxed">{formatContent(message.content)}</div>
+        <div className="text-sm leading-relaxed prose prose-invert max-w-none">
+          {formatContent(message.content)}
+        </div>
 
         {/* Debug Info */}
         {message.debug && Object.keys(message.debug).length > 0 && (
-          <div className="mt-3 border-t border-current/20 pt-2">
+          <div className="mt-4 border-t border-border-light/30 pt-3">
             <button
               onClick={() => setShowDebug(!showDebug)}
-              className="text-xs opacity-60 hover:opacity-100 flex items-center gap-1"
+              className="text-xs text-muted hover:text-muted-light flex items-center gap-1.5 transition-colors"
             >
               <ChevronDown
-                size={14}
-                className={`transition-transform ${showDebug ? "rotate-180" : ""}`}
+                size={16}
+                className={`transition-transform duration-200 ${showDebug ? "rotate-180" : ""}`}
               />
-              Debug Info
+              Debug Information
             </button>
 
             {showDebug && (
-              <div className="mt-2 text-xs opacity-75 font-mono bg-black/30 p-2 rounded max-h-48 overflow-y-auto">
-                <pre>{JSON.stringify(message.debug, null, 2)}</pre>
+              <div className="mt-3 text-xs text-muted-light font-mono bg-card/50 border border-border p-3 rounded-lg max-h-64 overflow-y-auto">
+                <pre className="whitespace-pre-wrap break-words">
+                  {JSON.stringify(message.debug, null, 2)}
+                </pre>
               </div>
             )}
           </div>
