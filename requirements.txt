@@ -1,0 +1,22 @@
+fastapi==0.115.6
+uvicorn==0.30.6
+pydantic==2.8.2
+python-dotenv==1.0.1
+<<<<<<< HEAD
+google-genai>=1.0.0
+=======
+anthropic==0.34.2
+>>>>>>> 090776a10d9a80e16060b1ba408f38cf6bc4e0cf
+
+sympy==1.13.3
+numpy==2.1.0
+
+qiskit==1.1.1
+qiskit-aer==0.14.1
+
+<<<<<<< HEAD
+qutip==5.0.4
+
+=======
+qutip==5.0.5
+>>>>>>> 090776a10d9a80e16060b1ba408f38cf6bc4e0cf
