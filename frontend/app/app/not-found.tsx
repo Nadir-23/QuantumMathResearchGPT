@@ -23,7 +23,7 @@ export default function NotFound() {
         </motion.div>
         <h2 className="text-xl font-bold text-white mb-2">Page Not Found</h2>
         <p className="text-sm text-white/40 mb-6">
-          The page you're looking for doesn't exist or has been moved.
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <div className="flex items-center justify-center gap-3">
           <Link href="/app/chat">

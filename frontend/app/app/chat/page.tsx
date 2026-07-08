@@ -324,6 +324,7 @@ export default function ChatPage() {
             <Paperclip className="w-4 h-4" />
           </Button>
           <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0 text-white/30 hover:text-white/60">
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image className="w-4 h-4" />
           </Button>
           <textarea
