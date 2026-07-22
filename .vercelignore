@@ -1,0 +1,19 @@
+# Ignore Python backend - deployed separately to Railway
+app/
+tools/
+agents/
+rag/
+memory/
+tests/
+requirements.txt
+pyproject.toml
+Pipfile
+Dockerfile
+docker-compose.yml
+Procfile
+quantummath.db
+*.db
+.env
+.env.example
+.github/
+.git/
