@@ -8,7 +8,7 @@ on:
 
 env:
   PYTHON_VERSION: "3.12"
-  NODE_VERSION: "20"
+  NODE_VERSION: "22"
 
 jobs:
   test-backend:
@@ -58,11 +58,11 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: http://localhost:8000
 
-  deploy:
-    name: Deploy
+  deploy-vercel:
+    name: Deploy to Vercel
     needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.VERCEL_TOKEN != ''
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -75,6 +75,15 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: frontend
           vercel-args: "--prod"
+
+  deploy-railway:
+    name: Deploy to Railway
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.RAILWAY_TOKEN != ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Deploy to Railway
         uses: bervProject/railway-deploy@main
