@@ -75,13 +75,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check Vercel secrets
+        id: check-vercel
+        run: |
+          if [ -n "$VERCEL_TOKEN_SET" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Vercel deployment secrets not configured. Skipping Vercel deploy."
+          fi
+        env:
+          VERCEL_TOKEN_SET: ${{ secrets.VERCEL_TOKEN }}
+
       - name: Deploy to Vercel
+        if: steps.check-vercel.outputs.available == 'true'
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: frontend
           vercel-args: "--prod"
 
   deploy-railway:
@@ -93,7 +105,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check Railway secrets
+        id: check-railway
+        run: |
+          if [ -n "$RAILWAY_TOKEN_SET" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Railway deployment secrets not configured. Skipping Railway deploy."
+          fi
+        env:
+          RAILWAY_TOKEN_SET: ${{ secrets.RAILWAY_TOKEN }}
+
       - name: Deploy to Railway
+        if: steps.check-railway.outputs.available == 'true'
         uses: bervProject/railway-deploy@main
         with:
           railway_token: ${{ secrets.RAILWAY_TOKEN }}
