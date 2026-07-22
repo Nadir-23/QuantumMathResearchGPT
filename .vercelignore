@@ -1,19 +1,42 @@
-# Ignore Python backend - deployed separately to Railway
+# Python backend - deployed separately to Railway
 app/
 tools/
 agents/
 rag/
 memory/
 tests/
+docs/
+
+# Python files
 requirements.txt
 pyproject.toml
 Pipfile
+Pipfile.lock
+*.py
+*.pyc
+__pycache__/
+
+# Docker
 Dockerfile
 docker-compose.yml
+.dockerignore
+
+# Backend config
 Procfile
+railway.json
+.env
+.env.*
 quantummath.db
 *.db
-.env
-.env.example
+
+# CI/CD
 .github/
 .git/
+.vscode/
+.pytest_cache/
+.venv/
+venv/
+
+# Misc
+*.md
+LICENSE

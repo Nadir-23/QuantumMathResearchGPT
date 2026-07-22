@@ -66,8 +66,8 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: http://localhost:8000
 
-  deploy:
-    name: Deploy
+  deploy-vercel:
+    name: Deploy to Vercel
     needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -75,26 +75,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check Vercel secrets
-        id: check-vercel
-        run: |
-          if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
-            echo "available=true" >> $GITHUB_OUTPUT
-          else
-            echo "available=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Check Railway secrets
-        id: check-railway
-        run: |
-          if [ -n "${{ secrets.RAILWAY_TOKEN }}" ]; then
-            echo "available=true" >> $GITHUB_OUTPUT
-          else
-            echo "available=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Deploy to Vercel
-        if: steps.check-vercel.outputs.available == 'true'
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -103,14 +84,17 @@ jobs:
           working-directory: frontend
           vercel-args: "--prod"
 
+  deploy-railway:
+    name: Deploy to Railway
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy to Railway
-        if: steps.check-railway.outputs.available == 'true'
         uses: bervProject/railway-deploy@main
         with:
           railway_token: ${{ secrets.RAILWAY_TOKEN }}
           service: backend
-
-      - name: Skip deploys notice
-        if: steps.check-vercel.outputs.available == 'false' && steps.check-railway.outputs.available == 'false'
-        run: |
-          echo "::warning::No deployment secrets found. Add VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, and RAILWAY_TOKEN to GitHub repository secrets."
