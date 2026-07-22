@@ -1,22 +1,26 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 import time
 import logging
 
 from app.config import settings
 from app.api.chat import router as chat_router
+from app.api.math import router as math_router
+from app.api.auth import router as auth_router
+from app.api.admin import router as admin_router
+from app.models.database import init_db, SessionLocal
+from app.core.rate_limiter import limiter
+from app.auth.middleware import AuditLogMiddleware
+from app.auth.seed import seed_roles_and_permissions, seed_demo_accounts
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
     title="QuantumMathResearchGPT",
@@ -27,24 +31,19 @@ app = FastAPI(
 )
 
 app.state.limiter = limiter
-
-
-@app.exception_handler(RateLimitExceeded)
-async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-    return JSONResponse(
-        status_code=429,
-        content={"detail": "Rate limit exceeded. Try again later."},
-    )
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
     allow_headers=["*"],
     expose_headers=["X-Request-ID"],
 )
+
+app.add_middleware(AuditLogMiddleware)
 
 
 @app.middleware("http")
@@ -68,6 +67,23 @@ async def add_security_headers(request: Request, call_next):
 
 
 app.include_router(chat_router)
+app.include_router(math_router)
+app.include_router(auth_router)
+app.include_router(admin_router)
+
+
+@app.on_event("startup")
+def startup_event():
+    init_db()
+    db = SessionLocal()
+    try:
+        seed_roles_and_permissions(db)
+        if settings.ENVIRONMENT == "development":
+            seed_demo_accounts(db)
+    except Exception as e:
+        logger.warning(f"Seed skipped or failed: {e}")
+    finally:
+        db.close()
 
 
 @app.get("/health")

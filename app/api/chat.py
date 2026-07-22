@@ -1,10 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import uuid
 import json
 
 from app.core.orchestrator import run_orchestrator, run_orchestrator_stream
+from app.core.deps import get_current_active_user
+from app.models.user import User
 
 router = APIRouter()
 
@@ -21,7 +23,7 @@ class ChatResponse(BaseModel):
 
 
 @router.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
+def chat(req: ChatRequest, current_user: User = Depends(get_current_active_user)):
     conversation_id = req.conversation_id or str(uuid.uuid4())
     answer, debug = run_orchestrator(
         conversation_id=conversation_id,
@@ -35,7 +37,7 @@ def chat(req: ChatRequest):
 
 
 @router.post("/chat/stream")
-def chat_stream(req: ChatRequest):
+def chat_stream(req: ChatRequest, current_user: User = Depends(get_current_active_user)):
     conversation_id = req.conversation_id or str(uuid.uuid4())
 
     def event_generator():

@@ -6,7 +6,9 @@ import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAppStore } from "@/lib/store"
-import { motion } from "framer-motion"
+import { useAuthStore } from "@/lib/auth-store"
+import { useRBAC } from "@/components/auth/rbac-provider"
+
 import {
   Atom, MessageSquare, Search, Calculator, FlaskConical, Code2,
   ShieldCheck, FileText, BookOpen, Beaker, Database,
@@ -52,6 +54,8 @@ export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { sidebarCollapsed: collapsed, setSidebarCollapsed, theme, toggleTheme, newConversation } = useAppStore()
+  const { user, logout } = useAuthStore()
+  const { isAdmin } = useRBAC()
   const [history] = useState<HistoryItem[]>(MOCK_HISTORY)
 
   function handleNewChat() {
@@ -61,6 +65,12 @@ export default function Sidebar({ onClose }: SidebarProps) {
   }
 
   function handleNavClick() {
+    onClose?.()
+  }
+
+  function handleLogout() {
+    logout()
+    router.push("/login")
     onClose?.()
   }
 
@@ -108,18 +118,16 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
         {/* New Chat Button */}
         <div className="px-3 pt-3 pb-1">
-          <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             onClick={handleNewChat}
             className={cn(
-              "w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold transition-all",
+              "w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold transition-all active:scale-[0.98] hover:scale-[1.01]",
               "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
             )}
           >
             <Plus className="w-4 h-4" />
             {!collapsed && <span>New Chat</span>}
-          </motion.button>
+          </button>
         </div>
 
         {/* Navigation */}
@@ -219,6 +227,23 @@ export default function Sidebar({ onClose }: SidebarProps) {
           )}
         </nav>
 
+        {/* Admin Section (visible only to admins) */}
+        {isAdmin && !collapsed && (
+          <div className="px-2 pb-2">
+            <div className="px-3 py-1.5 text-[10px] font-semibold text-white/25 uppercase tracking-widest">
+              Administration
+            </div>
+            <Link
+              href="/admin"
+              onClick={handleNavClick}
+              className={cn("sidebar-item", pathname.startsWith("/admin") && "active")}
+            >
+              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <span>Admin Panel</span>
+            </Link>
+          </div>
+        )}
+
         {/* Bottom */}
         <div className="p-2 border-t border-white/[0.04] space-y-1">
           {/* Theme toggle */}
@@ -237,22 +262,22 @@ export default function Sidebar({ onClose }: SidebarProps) {
           )}>
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-bold">
-                N
+                {user?.username?.[0]?.toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>
             {!collapsed && (
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[12px] font-medium text-white/80 truncate">Nadir</span>
+                  <span className="text-[12px] font-medium text-white/80 truncate">{user?.full_name || user?.username || "User"}</span>
                   <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                     PRO
                   </span>
                 </div>
-                <div className="text-[10px] text-white/30 truncate">nadir@example.com</div>
+                <div className="text-[10px] text-white/30 truncate">{user?.email || "user@example.com"}</div>
               </div>
             )}
             {!collapsed && (
-              <button className="p-1 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/[0.04] transition-all">
+              <button onClick={handleLogout} className="p-1 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/[0.04] transition-all">
                 <LogOut className="w-3.5 h-3.5" />
               </button>
             )}

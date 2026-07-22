@@ -1,8 +1,5 @@
-"use client"
-
-import { motion } from "framer-motion"
+import { type ReactNode } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import {
   ArrowRight, Play, Atom, FlaskConical, Search, Code2, ShieldCheck,
   GraduationCap, ChevronRight,
@@ -25,6 +22,73 @@ const stats = [
   { label: "Papers Analyzed", value: "100K+" },
 ]
 
+function MotionFadeIn({
+  children,
+  className,
+  delay = 0,
+  ...rest
+}: {
+  children: ReactNode
+  className?: string
+  delay?: number
+} & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={`hero-fade-in ${className ?? ""}`.trim()}
+      style={{ animationDelay: `${delay}s` }}
+      {...rest}
+    >
+      {children}
+    </div>
+  )
+}
+
+function MotionFadeInView({
+  children,
+  className,
+  delay = 0,
+  ...rest
+}: {
+  children: ReactNode
+  className?: string
+  delay?: number
+} & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={`hero-fade-in ${className ?? ""}`.trim()}
+      style={{ animationDelay: `${delay}s` }}
+      {...rest}
+    >
+      {children}
+    </div>
+  )
+}
+
+function FloatingEquations() {
+  const equations = [
+    { label: "Hamiltonian", eq: "Ĥ|ψ⟩ = E|ψ⟩" },
+    { label: "Wavefunction", eq: "Ψ(x,t)" },
+    { label: "Feynman Path", eq: "∫ 𝒟x e^{iS/ℏ}" },
+  ]
+
+  return (
+    <div className="mt-16 grid grid-cols-3 gap-3 max-w-lg mx-auto">
+      {equations.map((item, i) => (
+        <div
+          key={item.label}
+          className="hero-float"
+          style={{ animationDelay: `${i * 0.5}s` }}
+        >
+          <div className="rounded-[18px] bg-white/[0.03] border border-white/[0.05] px-3 py-3 text-center">
+            <div className="text-[8px] text-white/25 uppercase tracking-widest mb-1">{item.label}</div>
+            <div className="text-[13px] font-mono text-white/60">{item.eq}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function HeroSection() {
   return (
     <div className="min-h-screen bg-[#08111F]">
@@ -42,9 +106,10 @@ export default function HeroSection() {
               <a key={item} href="#" className="px-3 py-1.5 text-[13px] text-white/40 hover:text-white/70 rounded-lg hover:bg-white/[0.04] transition-all">{item}</a>
             ))}
           </div>
-          <Link href="/app/chat">
-            <Button size="sm" variant="secondary" className="text-[12px]">Launch App <ArrowRight className="w-3 h-3 ml-1" /></Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="inline-flex items-center justify-center h-9 px-3 rounded-xl text-[12px] font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200">Sign In</Link>
+            <Link href="/register" className="inline-flex items-center justify-center h-9 px-3 rounded-xl text-[12px] font-medium bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500 shadow-lg shadow-blue-500/25 transition-all duration-200">Get Started <ArrowRight className="w-3 h-3 ml-1" /></Link>
+          </div>
         </div>
       </nav>
 
@@ -55,40 +120,29 @@ export default function HeroSection() {
         <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-purple-500/[0.08] rounded-full blur-[120px]" />
         <ParticleField />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] mb-6">
+          <MotionFadeIn className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] mb-6">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
             </span>
             <span className="text-[11px] text-white/50 font-medium">Multi-Agent Scientific AI Platform</span>
-          </motion.div>
+          </MotionFadeIn>
 
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-5">
+          <MotionFadeIn className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-5" delay={0.1}>
             <span className="text-white">Scientific AI Copilot</span><br />
             <span className="gradient-text">for Mathematics & Quantum Computing</span>
-          </motion.h1>
+          </MotionFadeIn>
 
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="text-[15px] sm:text-base text-white/40 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <MotionFadeIn className="text-[15px] sm:text-base text-white/40 max-w-2xl mx-auto mb-8 leading-relaxed" delay={0.2}>
             Solve mathematics, simulate quantum systems, perform symbolic computation, generate scientific code, analyze research papers, and verify every result with AI.
-          </motion.p>
+          </MotionFadeIn>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/app/chat"><Button size="lg" className="group min-w-[200px]">Start Research <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" /></Button></Link>
-            <Button variant="secondary" size="lg" className="min-w-[200px]"><Play className="w-3.5 h-3.5 mr-2" /> View Documentation</Button>
-          </motion.div>
+          <MotionFadeIn className="flex flex-col sm:flex-row items-center justify-center gap-3" delay={0.3}>
+            <Link href="/register" className="group inline-flex items-center justify-center h-12 px-6 min-w-[200px] rounded-xl text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500 shadow-lg shadow-blue-500/25 transition-all duration-200">Start Research <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" /></Link>
+            <button type="button" className="inline-flex items-center justify-center h-12 px-6 min-w-[200px] rounded-xl text-base font-medium bg-white/5 text-white border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-200"><Play className="w-3.5 h-3.5 mr-2" /> View Documentation</button>
+          </MotionFadeIn>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.6 }} className="mt-16 grid grid-cols-3 gap-3 max-w-lg mx-auto">
-            {[
-              { label: "Hamiltonian", eq: "Ĥ|ψ⟩ = E|ψ⟩" },
-              { label: "Wavefunction", eq: "Ψ(x,t)" },
-              { label: "Feynman Path", eq: "∫ 𝒟x e^{iS/ℏ}" },
-            ].map((item, i) => (
-              <motion.div key={item.label} animate={{ y: [0, -5, 0] }} transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }} className="rounded-[18px] bg-white/[0.03] border border-white/[0.05] px-3 py-3 text-center">
-                <div className="text-[8px] text-white/25 uppercase tracking-widest mb-1">{item.label}</div>
-                <div className="text-[13px] font-mono text-white/60">{item.eq}</div>
-              </motion.div>
-            ))}
-          </motion.div>
+          <FloatingEquations />
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#08111F] to-transparent" />
       </section>
@@ -96,19 +150,19 @@ export default function HeroSection() {
       {/* Features */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+          <MotionFadeInView className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Powered by <span className="gradient-text">Specialized Agents</span></h2>
             <p className="text-sm text-white/40 max-w-xl mx-auto">Six expert AI agents work together to solve your most complex scientific problems.</p>
-          </motion.div>
+          </MotionFadeInView>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {features.map((f, i) => (
-              <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                <Link href="/app/chat"><div className="group p-5 rounded-[18px] bg-[#111827]/60 border border-white/[0.05] hover:border-white/[0.1] hover:bg-[#111827] transition-all duration-300 h-full cursor-pointer">
+              <MotionFadeInView key={f.title} delay={i * 0.05}>
+                <Link href="/app/chat" className="group block p-5 rounded-[18px] bg-[#111827]/60 border border-white/[0.05] hover:border-white/[0.1] hover:bg-[#111827] transition-all duration-300 h-full cursor-pointer">
                   <div className={`inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${f.color} shadow-lg ${f.glow} mb-3`}><f.icon className="w-4 h-4 text-white" /></div>
                   <h3 className="text-[14px] font-semibold text-white mb-1 group-hover:text-blue-400 transition-colors">{f.title}</h3>
                   <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
-                </div></Link>
-              </motion.div>
+                </Link>
+              </MotionFadeInView>
             ))}
           </div>
         </div>
@@ -118,10 +172,10 @@ export default function HeroSection() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((s, i) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
+            <MotionFadeInView key={s.label} delay={i * 0.1} className="text-center">
               <div className="text-2xl font-bold text-white mb-1">{s.value}</div>
               <div className="text-[11px] text-white/30 uppercase tracking-wider">{s.label}</div>
-            </motion.div>
+            </MotionFadeInView>
           ))}
         </div>
       </section>
@@ -129,11 +183,11 @@ export default function HeroSection() {
       {/* CTA */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <MotionFadeInView>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Start Your Research</h2>
-            <p className="text-sm text-white/40 mb-8">Free and open source. No account required.</p>
-            <Link href="/app/chat"><Button size="xl" className="group">Launch QuantumMathResearchGPT <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" /></Button></Link>
-          </motion.div>
+            <p className="text-sm text-white/40 mb-8">Free and open source. Create an account to get started.</p>
+            <Link href="/register" className="group inline-flex items-center justify-center h-14 px-8 rounded-xl text-lg font-medium bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500 shadow-lg shadow-blue-500/25 transition-all duration-200">Create Free Account <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" /></Link>
+          </MotionFadeInView>
         </div>
       </section>
 

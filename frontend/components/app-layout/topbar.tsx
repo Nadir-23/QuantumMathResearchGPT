@@ -3,9 +3,9 @@
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { PanelRightOpen, PanelRightClose, Share2, Settings, Menu } from "lucide-react"
+import { PanelRightOpen, PanelRightClose, Share2, Settings, Menu, Sun, Moon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
+
 
 const models = [
   { value: "Gemini 2.5 Flash", label: "Gemini 2.5 Flash" },
@@ -20,7 +20,7 @@ interface TopbarProps {
 }
 
 export default function Topbar({ onMenuToggle, isMobile }: TopbarProps) {
-  const { rightPanelOpen, setRightPanelOpen, selectedModel, setSelectedModel, messages } = useAppStore()
+  const { rightPanelOpen, setRightPanelOpen, selectedModel, setSelectedModel, messages, theme, toggleTheme } = useAppStore()
   const router = useRouter()
 
   const lastUserMsg = [...messages].reverse().find(m => m.role === "user")
@@ -58,14 +58,12 @@ export default function Topbar({ onMenuToggle, isMobile }: TopbarProps) {
 
       {/* Center: Title */}
       <div className="flex-1 flex justify-center min-w-0 px-4">
-        <motion.h1
+        <h1
           key={title}
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-[13px] font-medium text-white/60 truncate max-w-[300px] md:max-w-[400px]"
+          className="text-[13px] font-medium text-white/60 truncate max-w-[300px] md:max-w-[400px] hero-fade-in"
         >
           {title}
-        </motion.h1>
+        </h1>
       </div>
 
       {/* Right: Status + Actions */}
@@ -82,6 +80,17 @@ export default function Topbar({ onMenuToggle, isMobile }: TopbarProps) {
         {/* Share */}
         <Button variant="ghost" size="icon" className="h-8 w-8 text-white/40 hover:text-white/70">
           <Share2 className="w-4 h-4" />
+        </Button>
+
+        {/* Theme Toggle */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-white/40 hover:text-white/70"
+          onClick={toggleTheme}
+          title={theme === "dark" ? "Light Mode" : "Dark Mode"}
+        >
+          {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </Button>
 
         {/* Settings */}

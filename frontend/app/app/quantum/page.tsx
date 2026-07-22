@@ -48,7 +48,7 @@ export default function QuantumPage() {
       control: g.control !== undefined ? Math.min(g.control, numQubits - 1) : undefined,
     })))
     if (selectedQubit >= numQubits) setSelectedQubit(0)
-  }, [numQubits])
+  }, [numQubits, selectedQubit])
 
   const selectedTheta = QUBIT_STATES[qubitStates[selectedQubit]]?.theta ?? 0
   const selectedPhi = QUBIT_STATES[qubitStates[selectedQubit]]?.phi ?? 0

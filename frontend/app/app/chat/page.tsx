@@ -12,6 +12,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAppStore, AgentName } from "@/lib/store"
+import { useAuthStore } from "@/lib/auth-store"
 import ActiveAgentBar from "@/components/active-agent-bar"
 import DerivationCard from "@/components/derivation-card"
 import VerificationCard from "@/components/verification-card"
@@ -41,6 +42,7 @@ export default function ChatPage() {
     streaming, setStreaming, streamingText, setStreamingText,
     setCurrentAgent, currentAgent, newConversation,
   } = useAppStore()
+  const { accessToken } = useAuthStore()
   const [input, setInput] = useState("")
   const endRef = useRef<HTMLDivElement | null>(null)
 
@@ -55,7 +57,7 @@ export default function ChatPage() {
         text: "Welcome to **QuantumMathResearchGPT**. I'm your multi-agent scientific AI copilot.\n\nI can help with:\n- **Mathematics**: symbolic derivations, calculus, linear algebra\n- **Quantum Physics**: Schrödinger equation, operators, bra-ket notation\n- **Quantum Computing**: Qiskit circuits, Bell states, error correction\n- **Research**: ArXiv search, literature review\n- **Code Generation**: Python, Julia, MATLAB, Qiskit\n\nWhat would you like to explore?",
       })
     }
-  }, [])
+  }, [addMessage, messages.length, setConversationId])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -85,7 +87,10 @@ export default function ChatPage() {
     try {
       const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ user_message: userMessage, conversation_id: conversationId }),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
